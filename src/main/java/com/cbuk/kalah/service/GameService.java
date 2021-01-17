@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.cbuk.kalah.model.Game;
 import com.cbuk.kalah.model.Pit;
 import com.cbuk.kalah.repository.GameRepository;
+import com.cbuk.kalah.rest.exception.KalahException;
 
 @Service
 public class GameService {
@@ -46,19 +47,19 @@ public class GameService {
 		Optional<Game> maybeGame = gameRepository.findById(gameId);
 
 		if (maybeGame.isEmpty()) {
-			throw new RuntimeException("Invalid game ID");
+			throw new KalahException("Invalid game ID");
 		}
 
 		Game game = maybeGame.get();
 
 		// TODO handle failure
 		if (pitNo < 1 || pitNo >= PIT_COUNT || isSouthKalah(pitNo)) {
-			throw new RuntimeException("Invalid pit ID");
+			throw new KalahException("Invalid pit ID");
 		}
 
 		if (!((game.getNextTurn().equals(SOUTH) && isSouthPit(pitNo))
 				|| (game.getNextTurn().equals(NORTH) && isNorthPit(pitNo)))) {
-			throw new RuntimeException("Invalid pit ID for this turn");
+			throw new KalahException("Invalid pit ID for this turn");
 		}
 
 		List<Pit> pits = game.getPits();
@@ -116,7 +117,7 @@ public class GameService {
 
 			gameRepository.save(game);
 		} else {
-			throw new RuntimeException("No stones in pit");
+			throw new KalahException("No stones in pit");
 		}
 
 		return game;

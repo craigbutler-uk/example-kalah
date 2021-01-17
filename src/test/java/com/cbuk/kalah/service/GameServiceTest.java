@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.cbuk.kalah.model.Game;
 import com.cbuk.kalah.model.Pit;
 import com.cbuk.kalah.repository.GameRepository;
+import com.cbuk.kalah.rest.exception.KalahException;
 
 @ExtendWith(MockitoExtension.class)
 public class GameServiceTest {
@@ -176,7 +177,7 @@ public class GameServiceTest {
 	public void testInvalidGameId() {
 		when(gameRepository.findById(99L)).thenReturn(Optional.empty());
 
-		Assertions.assertThrows(RuntimeException.class, () -> {
+		Assertions.assertThrows(KalahException.class, () -> {
 			gameService.move(99L, 7);
 		});
 
@@ -187,7 +188,7 @@ public class GameServiceTest {
 		when(gameRepository.findById(99L))
 				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 1, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0 })));
 
-		Assertions.assertThrows(RuntimeException.class, () -> {
+		Assertions.assertThrows(KalahException.class, () -> {
 			gameService.move(99L, 7);
 		});
 
@@ -198,7 +199,7 @@ public class GameServiceTest {
 		when(gameRepository.findById(99L))
 				.thenReturn(Optional.of(getGame(99L, "N", new int[] { 1, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0 })));
 
-		Assertions.assertThrows(RuntimeException.class, () -> {
+		Assertions.assertThrows(KalahException.class, () -> {
 			gameService.move(99L, 7);
 		});
 
@@ -209,7 +210,7 @@ public class GameServiceTest {
 		when(gameRepository.findById(99L))
 				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 1, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0 })));
 
-		Assertions.assertThrows(RuntimeException.class, () -> {
+		Assertions.assertThrows(KalahException.class, () -> {
 			gameService.move(99L, 2);
 		});
 
