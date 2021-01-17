@@ -44,7 +44,7 @@ public class GameControllerTest {
 		MvcResult result = this.mockMvc.perform(MockMvcRequestBuilders.post("/games")).andExpect(status().isOk())
 				.andReturn();
 
-		assertThat(result.getResponse().getContentAsString(), is("{\"id\":99,\"uri\":\"http://localhost/game/99\"}"));
+		assertThat(result.getResponse().getContentAsString(), is("{\"id\":99,\"uri\":\"http://localhost/games/99\"}"));
 	}
 
 	@Test
@@ -58,7 +58,8 @@ public class GameControllerTest {
 		MvcResult result = this.mockMvc.perform(MockMvcRequestBuilders.put("/games/99/pits/1"))
 				.andExpect(status().isOk()).andReturn();
 
-		assertThat(result.getResponse().getContentAsString(), is("{\"id\":99,\"uri\":\"http://localhost/game/99\",\"pits\":{}}"));
+		assertThat(result.getResponse().getContentAsString(),
+				is("{\"id\":99,\"uri\":\"http://localhost/games/99\",\"pits\":{}}"));
 	}
 
 }

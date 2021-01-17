@@ -43,14 +43,19 @@ public class GameService {
 		return game;
 	}
 
-	public Game move(long gameId, int pitNo) {
+	public Game getGame(long gameId) {
 		Optional<Game> maybeGame = gameRepository.findById(gameId);
 
 		if (maybeGame.isEmpty()) {
 			throw new KalahException("Invalid game ID");
 		}
 
-		Game game = maybeGame.get();
+		return maybeGame.get();
+	}
+
+	public Game move(long gameId, int pitNo) {
+
+		Game game = getGame(gameId);
 
 		// TODO handle failure
 		if (pitNo < 1 || pitNo >= PIT_COUNT || isSouthKalah(pitNo)) {
