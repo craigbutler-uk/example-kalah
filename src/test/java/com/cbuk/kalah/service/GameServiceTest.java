@@ -41,45 +41,45 @@ public class GameServiceTest {
 	@Test
 	public void testSouthEndsInKalah() {
 		when(gameRepository.findById(99L))
-				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0 })));
+				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 0, 0, 0, 0, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0 })));
 
 		Game game = gameService.move(99L, 6);
 
 		assertThat(game.getNextTurn(), is("S"));
 		assertThat(game.getPits().get(5).getStoneCount(), is(0));
-		assertThat(game.getPits().get(6).getStoneCount(), is(1));
+		assertThat(game.getPits().get(6).getStoneCount(), is(3));
 	}
 
 	@Test
 	public void testNorthEndsInKalah() {
 		when(gameRepository.findById(99L))
-				.thenReturn(Optional.of(getGame(99L, "N", new int[] { 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0 })));
+				.thenReturn(Optional.of(getGame(99L, "N", new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2 })));
 
 		Game game = gameService.move(99L, 13);
 
 		assertThat(game.getNextTurn(), is("N"));
 		assertThat(game.getPits().get(12).getStoneCount(), is(0));
-		assertThat(game.getPits().get(13).getStoneCount(), is(1));
+		assertThat(game.getPits().get(13).getStoneCount(), is(3));
 	}
 
 	@Test
 	public void testSouthEndsWithOneStone() {
 		when(gameRepository.findById(99L))
-				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0 })));
+				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 1, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 9, 0, 0 })));
 
 		Game game = gameService.move(99L, 1);
 
 		assertThat(game.getNextTurn(), is("N"));
 		assertThat(game.getPits().get(0).getStoneCount(), is(0));
 		assertThat(game.getPits().get(1).getStoneCount(), is(0));
-		assertThat(game.getPits().get(6).getStoneCount(), is(10));
+		assertThat(game.getPits().get(6).getStoneCount(), is(15));
 		assertThat(game.getPits().get(12).getStoneCount(), is(0));
 	}
 
 	@Test
 	public void testSouthEndsWithOneStoneNothingOpposite() {
 		when(gameRepository.findById(99L))
-				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 })));
+				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0 })));
 
 		Game game = gameService.move(99L, 1);
 
@@ -93,7 +93,7 @@ public class GameServiceTest {
 	@Test
 	public void testNorthEndsWithOneStone() {
 		when(gameRepository.findById(99L))
-				.thenReturn(Optional.of(getGame(99L, "N", new int[] { 0, 0, 0, 0, 8, 0, 0, 1, 0, 0, 0, 0, 0, 0 })));
+				.thenReturn(Optional.of(getGame(99L, "N", new int[] { 0, 0, 0, 0, 8, 0, 0, 1, 0, 0, 0, 0, 0, 1 })));
 
 		Game game = gameService.move(99L, 8);
 
@@ -101,13 +101,13 @@ public class GameServiceTest {
 		assertThat(game.getPits().get(4).getStoneCount(), is(0));
 		assertThat(game.getPits().get(8).getStoneCount(), is(0));
 		assertThat(game.getPits().get(6).getStoneCount(), is(0));
-		assertThat(game.getPits().get(13).getStoneCount(), is(9));
+		assertThat(game.getPits().get(13).getStoneCount(), is(10));
 	}
 
 	@Test
 	public void testNorthMoveWrapsCorrectly() {
 		when(gameRepository.findById(99L))
-				.thenReturn(Optional.of(getGame(99L, "N", new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0 })));
+				.thenReturn(Optional.of(getGame(99L, "N", new int[] { 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 3, 0 })));
 
 		Game game = gameService.move(99L, 13);
 
@@ -141,6 +141,38 @@ public class GameServiceTest {
 	}
 
 	@Test
+	public void testSouthEndsGame() {
+		when(gameRepository.findById(99L))
+				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 0, 0, 0, 0, 0, 1, 10, 1, 0, 0, 0, 0, 0, 11 })));
+
+		Game game = gameService.move(99L, 6);
+
+		assertThat(game.getNextTurn(), is("S"));
+		assertThat(game.getPits().get(0).getStoneCount(), is(0));
+		assertThat(game.getPits().get(1).getStoneCount(), is(0));
+		assertThat(game.getPits().get(6).getStoneCount(), is(11));
+		assertThat(game.getPits().get(7).getStoneCount(), is(0));
+		assertThat(game.getPits().get(13).getStoneCount(), is(12));
+
+	}
+
+	@Test
+	public void testSouthEndsGameByEmptyingNorth() {
+		when(gameRepository.findById(99L))
+				.thenReturn(Optional.of(getGame(99L, "S", new int[] { 1, 0, 1, 0, 0, 0, 10, 0, 0, 0, 0, 8, 0, 11 })));
+
+		Game game = gameService.move(99L, 1);
+
+		assertThat(game.getNextTurn(), is("N"));
+		assertThat(game.getPits().get(0).getStoneCount(), is(0));
+		assertThat(game.getPits().get(1).getStoneCount(), is(0));
+		assertThat(game.getPits().get(2).getStoneCount(), is(0));
+		assertThat(game.getPits().get(6).getStoneCount(), is(20));
+		assertThat(game.getPits().get(13).getStoneCount(), is(11));
+
+	}
+
+	@Test
 	public void testInvalidGameId() {
 		when(gameRepository.findById(99L)).thenReturn(Optional.empty());
 
@@ -171,7 +203,7 @@ public class GameServiceTest {
 		});
 
 	}
-	
+
 	@Test
 	public void testNoStonesInPit() {
 		when(gameRepository.findById(99L))

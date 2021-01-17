@@ -61,7 +61,8 @@ public class GameService {
 			throw new RuntimeException("Invalid pit ID for this turn");
 		}
 
-		Pit pit = game.getPits().get(pitNo - 1);
+		List<Pit> pits = game.getPits();
+		Pit pit = pits.get(pitNo - 1);
 		int stoneCount = pit.getStoneCount();
 		pit.setStoneCount(0);
 		boolean isSouthMove = isSouthPit(pitNo);
@@ -72,7 +73,7 @@ public class GameService {
 				nextPitNo = nextPit(nextPitNo);
 				if ((isSouthMove && !isNorthKalah(nextPitNo)) || (!isSouthMove && !isSouthKalah(nextPitNo))) {
 					nextPit = game.getPits().get(nextPitNo - 1);
-					nextPit.setStoneCount(nextPit.getStoneCount() + 1);
+					nextPit.addStones(1);
 					stoneCount--;
 
 				}
@@ -84,15 +85,28 @@ public class GameService {
 
 					Pit oppositePit = game.getPits().get(getOppositePitNo(nextPitNo) - 1);
 					if (oppositePit.getStoneCount() > 0) {
+						int kalahIndex = PIT_COUNT - 1;
 						if (isSouthMove) {
-							game.getPits().get(SOUTH_KALAH - 1).setStoneCount(oppositePit.getStoneCount() + 1);
-						} else {
-							game.getPits().get(PIT_COUNT - 1).setStoneCount(oppositePit.getStoneCount() + 1);
+							kalahIndex = SOUTH_KALAH - 1;
 						}
+						Pit kalah = game.getPits().get(kalahIndex);
+						kalah.addStones(oppositePit.getStoneCount() + 1);
 						oppositePit.setStoneCount(0);
 						nextPit.setStoneCount(0);
 					}
 				}
+			}
+
+			List<Pit> southStones = pits.subList(0, SOUTH_KALAH - 1);
+			int southStoneCount = southStones.stream().mapToInt(Pit::getStoneCount).sum();
+			List<Pit> northStones = pits.subList(SOUTH_KALAH, PIT_COUNT - 1);
+			int northStoneCount = northStones.stream().mapToInt(Pit::getStoneCount).sum();
+
+			if (southStoneCount == 0 || northStoneCount == 0) {
+				pits.get(SOUTH_KALAH - 1).addStones(southStoneCount);
+				southStones.stream().forEach(p -> p.setStoneCount(0));
+				pits.get(PIT_COUNT - 1).addStones(northStoneCount);
+				northStones.stream().forEach(p -> p.setStoneCount(0));
 			}
 
 			if (!((isSouthMove && isSouthKalah(nextPitNo)) || (!isSouthMove && isNorthKalah(nextPitNo)))) {

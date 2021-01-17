@@ -22,4 +22,8 @@ public class Pit {
 	private Game game;
 	
 	private int stoneCount;
+	
+	public void addStones (int stones) {
+		this.stoneCount = this.stoneCount + stones;
+	}
 }
