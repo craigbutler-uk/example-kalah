@@ -12,7 +12,10 @@ import com.cbuk.kalah.model.Pit;
 import com.cbuk.kalah.repository.GameRepository;
 import com.cbuk.kalah.rest.exception.KalahException;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class GameService {
 
 	public final static int STONE_COUNT = 6;
@@ -47,6 +50,7 @@ public class GameService {
 		Optional<Game> maybeGame = gameRepository.findById(gameId);
 
 		if (maybeGame.isEmpty()) {
+			log.warn("Invalid game ID of {} requested", gameId);
 			throw new KalahException("Invalid game ID");
 		}
 
@@ -59,11 +63,13 @@ public class GameService {
 
 		// TODO handle failure
 		if (pitNo < 1 || pitNo >= PIT_COUNT || isSouthKalah(pitNo)) {
+			log.warn("Invalid pit ID of {} requested", pitNo);
 			throw new KalahException("Invalid pit ID");
 		}
 
 		if (!((game.getNextTurn().equals(SOUTH) && isSouthPit(pitNo))
 				|| (game.getNextTurn().equals(NORTH) && isNorthPit(pitNo)))) {
+			log.warn("Invalid pit ID of {} for turn {} requested", pitNo, game.getNextTurn());
 			throw new KalahException("Invalid pit ID for this turn");
 		}
 
@@ -116,12 +122,12 @@ public class GameService {
 			}
 
 			if (!((isSouthMove && isSouthKalah(nextPitNo)) || (!isSouthMove && isNorthKalah(nextPitNo)))) {
-				// indicate it is other players turn
 				game.setNextTurn(game.getNextTurn().equals(SOUTH) ? NORTH : SOUTH);
 			}
 
 			gameRepository.save(game);
 		} else {
+			log.warn("Pit requested with ID of {} is empty", pitNo);
 			throw new KalahException("No stones in pit");
 		}
 
