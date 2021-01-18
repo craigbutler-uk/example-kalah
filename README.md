@@ -64,7 +64,11 @@ As well as providing documentation, the API can be tested from within the Swagge
 
 ### Tests
 
-A JUnit/Mockito test provides a test of the game logic. A Spring MvcTest tests the REST API.
+A JUnit/Mockito test provides a test of the game logic. 
+
+A Spring MvcTest tests the REST API.
+
+A Spring JpaTest tests the persistence.
 
 ## About the game
 
