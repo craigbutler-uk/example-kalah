@@ -35,10 +35,12 @@ public class GameController {
 		Game game = gameService.newGame();
 		Long gameId = game.getId();
 
+		return new GameDto(gameId, getUri(uriB, gameId), null);
+	}
+
+	private URI getUri(UriComponentsBuilder uriB, Long gameId) {
 		UriComponents uriComponents = uriB.path("/games/{id}").buildAndExpand(gameId);
-
-		return new GameDto(gameId, uriComponents.toUri(), null);
-
+		return uriComponents.toUri();
 	}
 
 	@PutMapping("/games/{gameId}/pits/{pitId}")
@@ -49,10 +51,7 @@ public class GameController {
 
 		Game game = gameService.move(gameId, pitId);
 
-		UriComponents uriComponents = uriB.path("/games/{id}").buildAndExpand(gameId);
-
-		return getGameDto(game, uriComponents.toUri());
-
+		return getGameDto(game, getUri(uriB, gameId));
 	}
 
 	@GetMapping("/games/{gameId}")
@@ -62,14 +61,10 @@ public class GameController {
 
 		Game game = gameService.getGame(gameId);
 
-		UriComponents uriComponents = uriB.path("/games/{id}").buildAndExpand(gameId);
-
-		return getGameDto(game, uriComponents.toUri());
-
+		return getGameDto(game, getUri(uriB, gameId));
 	}
 
 	private GameDto getGameDto(Game game, URI uri) {
-		// TODO move this to mapper class?
 		List<Pit> pits = game.getPits();
 		Map<Integer, Integer> map = new HashMap<>();
 		for (int i = 1; i <= pits.size(); i++) {
