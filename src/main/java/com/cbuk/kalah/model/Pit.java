@@ -9,6 +9,9 @@ import javax.persistence.ManyToOne;
 
 import lombok.Data;
 
+/**
+ * Pit entity
+ */
 @Entity
 @Data
 public class Pit {

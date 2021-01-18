@@ -2,7 +2,9 @@ package com.cbuk.kalah.rest.exception;
 
 public class KalahException extends RuntimeException {
 
-    public KalahException(String message) {
+	private static final long serialVersionUID = -4351446467023675673L;
+
+	public KalahException(String message) {
         super(message);
     }
     
