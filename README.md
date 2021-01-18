@@ -42,10 +42,10 @@ curl --location --request GET 'http://localhost:8080/games/1'
 
 ## Technology
 
-###Spring Boot
+### Spring Boot
 The application was initially created at <https://start.spring.io/>. It uses Java 11.
 
-###Database
+### Database
 
 The game is persisted into a database using JPA/Hibernate and a JPA repository.
 
@@ -55,20 +55,20 @@ The database entities are deliberately different to the REST DTO, so we need to 
 
 The list of pits in the database is 0-based whereas the list of pits in the REST API is 1-based.
 
-###Swagger
+### Swagger
 
 The REST API is documented using Swagger. The Swagger UI can be accessed at 
 <http://localhost:8080/swagger-ui/#/game-controller>
 
 As well as providing documentation, the API can be tested from within the Swagger UI ('Try it out', 'Execute'). 
 
-###Tests
+### Tests
 
 A JUnit/Mockito test provides a test of the game logic. A Spring MvcTest tests the REST API.
 
 ## About the game
 
-The game is a simple implementation. It uses a single list of pits to represent the board. 
+The app is a simple implementation of Kalah. It uses a single list of pits to represent the board. 
 
 It does not have a concept of users, rather it uses the concept of a South turn and a North turn. The game always starts with it being South's turn and only stones in pits in the range 1 to 6 can be moved. When it is North's turn, only stones in pits 8 to 13 can be moved. Attempts to move stones from a pit which is not valid for the turn will result in an error. Using invalid IDs for the game ID or pit, as well as attempting to move stones from empty pits, will result in an error.
 
